@@ -7,9 +7,7 @@ class SnippetsController < ApplicationController
   def create
     @snippet = Snippet.new(snippet_params)
     if @snippet.save
-      uri = URI.parse('http://pygments.appspot.com/')
-      request = Net::HTTP.post_form(uri, {'lang' => @snippet.language, 'code' => @snippet.plain_code})
-      @snippet.update_attribute(:highlighted_code, request.body)
+      Resque.enqueue(SnippetHighlighter, @snippet.id)
       redirect_to @snippet, :notice => "Successfully created snippet."
     else
       render 'new'
