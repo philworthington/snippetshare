@@ -11,6 +11,7 @@ In Gemfile:
 
 In Terminal:
 > redis-server /usr/local/etc/redis.conf
+
 > rake resque:work QUEUE="*"
 
 
